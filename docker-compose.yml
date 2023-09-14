@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    # volumes:                  
+    #   - .docker/data/db:/var/lib/mysql
+    ports: 
+      - '3306:3306'
+    expose:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+    restart: always
+  
   app:
     container_name: nestjs-mysql
     image: nestjs-mysql
@@ -10,24 +24,9 @@ services:
     ports:
       - '${PORT}:${PORT}' 
     restart: unless-stopped  
-    working_dir: /app
-    volumes:
-      - ./:/app
     environment:
       MYSQL_HOST: mysql
-      MYSQL_USER: ${DATABASE_USERNAME}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DB: ${DATABASE_NAME}
+      MYSQL_PORT : 3306
     depends_on:
       - mysql
-  mysql:
-    container_name: mysql
-    image: mysql:8.0.24
-    # volumes:
-    #   - .docker/data/db:/var/lib/mysql
-    ports: 
-      - '3306:3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_DATABASE: ${DATABASE_NAME}
-    restart: unless-stopped
