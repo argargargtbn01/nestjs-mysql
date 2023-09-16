@@ -1,6 +1,5 @@
 version: '3.8'
 
-
 services:
   mysql:
     container_name: mysql
@@ -10,8 +9,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
-    restart: always
-  
+    restart: unless-stopped
+
   app:
     container_name: nestjs-mysql
     image: nestjs-mysql
@@ -22,7 +21,9 @@ services:
       - '${PORT}:${PORT}' 
     restart: unless-stopped  
     environment:
-      MYSQL_HOST: host.docker.internal
+      MYSQL_HOST: mysql
+      MYSQL_USER: ${DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DB: ${DATABASE_NAME}
     depends_on:
       - mysql
-
