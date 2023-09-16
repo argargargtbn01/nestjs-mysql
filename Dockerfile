@@ -1,8 +1,8 @@
 FROM node:18-alpine
 WORKDIR /app
+ENV NODE_ENV=Production
+COPY package*.json ./
+RUN npm install 
 COPY . .
-RUN npm install
-CMD ["node", "dist/main.js"]
-# CMD ["npm", "run", "start"]
-
+CMD ["npm", "run","start"]
 EXPOSE 4000
