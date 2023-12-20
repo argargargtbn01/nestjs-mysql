@@ -21,6 +21,14 @@ export class UserService {
       },
     });
   }
+
+  async findOne(username: string): Promise<User> {
+    return await this.userRepo.findOne({
+      where: {
+        username,
+      },
+    });
+  }
   async create(createUserDto: CreateUserDto): Promise<User> {
     return await this.userRepo.save(createUserDto);
   }
