@@ -4,9 +4,9 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 console.log('node_env: ', process.env.NODE_ENV);
-const databaseHost =
-  process.env.NODE_ENV === 'Production' ? 'host.docker.internal' : 'localhost';
+const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.internal' : 'localhost';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,6 +21,7 @@ const databaseHost =
       synchronize: true,
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
