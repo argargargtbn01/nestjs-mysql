@@ -28,5 +28,5 @@ export class User {
   updatedAt: Date;
 
   @Column()
-  role: UserRole;
+  role: string;
 }
