@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
 console.log('node_env: ', process.env.NODE_ENV);
 const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.internal' : 'localhost';
 @Module({
@@ -22,6 +23,7 @@ const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.intern
     }),
     UserModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
