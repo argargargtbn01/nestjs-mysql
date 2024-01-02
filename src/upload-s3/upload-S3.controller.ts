@@ -1,52 +1,52 @@
 import { Controller, Get, Param, Post, UseInterceptors, Put, UploadedFiles } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { UploadService } from './upload.service';
+import { UploadS3Service } from './upload-S3.service';
 @Controller('s3')
-export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+export class UploadS3Controller {
+  constructor(private readonly uploadS3Service: UploadS3Service) {}
   @Get('files')
   async listFiles(): Promise<any> {
-    return await this.uploadService.listFiles();
+    return await this.uploadS3Service.listFiles();
   }
 
   @Get('files/:fileName')
   async getFile(@Param('fileName') fileName: string): Promise<any> {
-    return await this.uploadService.getFile(fileName);
+    return await this.uploadS3Service.getFile(fileName);
   }
 
   @Post('files')
   @UseInterceptors(FilesInterceptor('files'))
   async uploadFiles(@UploadedFiles() files: Express.Multer.File[]): Promise<any> {
-    return await this.uploadService.uploadFiles(files);
+    return await this.uploadS3Service.uploadFiles(files);
   }
 
   @Get('buckets/acl')
   async getBucketACL(): Promise<any> {
-    return await this.uploadService.getBucketACL();
+    return await this.uploadS3Service.getBucketACL();
   }
 
   @Put('buckets/acl')
   async putBucketACL(): Promise<any> {
-    return await this.uploadService.putBucketACL();
+    return await this.uploadS3Service.putBucketACL();
   }
 
   @Get('buckets/cors-rules')
   async getBucketCORSRules(): Promise<any> {
-    return await this.uploadService.getBucketCORSRules();
+    return await this.uploadS3Service.getBucketCORSRules();
   }
 
   @Put('buckets/cors-rules')
   async putBucketCORSRules(): Promise<any> {
-    return await this.uploadService.putBucketCORSRules();
+    return await this.uploadS3Service.putBucketCORSRules();
   }
 
   @Get('buckets/policy')
   async getBucketPolicy(): Promise<any> {
-    return await this.uploadService.getBucketPolicy();
+    return await this.uploadS3Service.getBucketPolicy();
   }
 
   @Put('buckets/policy')
   async putBucketPolicy(): Promise<any> {
-    return await this.uploadService.putBucketPolicy();
+    return await this.uploadS3Service.putBucketPolicy();
   }
 }

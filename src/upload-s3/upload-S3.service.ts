@@ -13,7 +13,7 @@ import {
 import { Injectable } from '@nestjs/common';
 const BUCKET = 'sonat-storage';
 @Injectable()
-export class UploadService {
+export class UploadS3Service {
   private s3: S3Client;
   constructor() {
     this.s3 = new S3Client({
