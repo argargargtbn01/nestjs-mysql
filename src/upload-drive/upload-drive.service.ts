@@ -55,14 +55,21 @@ export class UploadDriveService {
     return result;
   }
 
-  async listFiles(): Promise<drive_v3.Schema$File[]> {
-    const folderId = FOLDER_ID;
+  async listFiles(_folderId?: string): Promise<any> {
+    const folderId = _folderId ? _folderId : FOLDER_ID;
     const response = await this.drive.files.list({
       q: `'${folderId}' in parents`,
       fields:
         'files(id, mimeType, name, originalFilename, owners, hasThumbnail, thumbnailLink, webViewLink)',
     });
-    return response.data.files;
+    const files = response.data.files;
+    for (const file of files) {
+      if (file.mimeType === 'application/vnd.google-apps.folder') {
+        file['children'] = await this.listFiles(file.id);
+      }
+    }
+
+    return files;
   }
 
   async getFile(fileId: string): Promise<drive_v3.Schema$File> {

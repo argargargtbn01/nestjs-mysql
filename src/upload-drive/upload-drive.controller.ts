@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadDriveService } from './upload-drive.service';
 import { drive_v3 } from 'googleapis';
@@ -15,8 +23,8 @@ export class UploadDriveController {
   }
 
   @Get('files')
-  async listFiles(): Promise<drive_v3.Schema$File[]> {
-    return await this.driveService.listFiles();
+  async listFiles(@Query('folderId') folderId: string): Promise<drive_v3.Schema$File[]> {
+    return await this.driveService.listFiles(folderId);
   }
 
   @Get('files/:fileId')
