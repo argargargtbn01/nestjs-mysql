@@ -4,6 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { SignupDto } from './dto/sign-up.dto';
 import { User } from 'src/user/user.entity';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,6 @@ export class AuthService {
   }
 
   async signup(signupDto: SignupDto): Promise<User> {
-    // i dont want to hashpassword now
     // const hashedPassword = await this.hashPassword(signupDto.password);
 
     const newUser: CreateUserDto = {
@@ -34,5 +34,36 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async authenticate(user: any): Promise<any> {
+    try {
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createRoleUser(obj: any) {
+    try {
+      const { displayName, password, email, role } = obj;
+      const { uid } = await admin.auth().createUser({
+        displayName,
+        password,
+        email,
+      });
+      await admin.auth().setCustomUserClaims(uid, { role });
+      return uid;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async signupWithFirebase(user: User): Promise<User> {
+    try {
+      return this.userService.create(user);
+    } catch (error) {
+      throw error;
+    }
   }
 }
