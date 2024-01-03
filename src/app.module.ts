@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './authentication/auth.module';
 import { UploadS3Module } from './upload-s3/upload-S3.module';
 import { UploadDriveModule } from './upload-drive/upload-drive.module';
 // console.log('node_env: ', process.env.NODE_ENV);
