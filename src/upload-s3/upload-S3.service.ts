@@ -50,19 +50,74 @@ export class UploadS3Service {
     }
   }
 
-  async listFiles(): Promise<any> {
+  // async listFiles(prefix = ''): Promise<any> {
+  //   try {
+  //     const params = {
+  //       Bucket: BUCKET,
+  //       Prefix: prefix,
+  //       Delimiter: '/',
+  //     };
+  //     const command = new ListObjectsCommand(params);
+  //     const res = await this.s3.send(command);
+  //     const files = res.Contents || [];
+  //     const folders = res.CommonPrefixes || [];
+
+  //     const result = [];
+
+  //     for (const file of files) {
+  //       const tenantId = file.Owner.ID.split('$')[0];
+  //       file['PublicUrl'] = `${process.env.S3_END_POINT}/${tenantId}:${BUCKET}/${file.Key}`;
+  //       if (file.Size > 0) result.push(file); // because folder ( = prefix) has size = 0
+  //     }
+
+  //     for (const folder of folders) {
+  //       const subFiles = await this.listFiles(folder.Prefix);
+  //       subFiles.filter((subFile) => {
+  //         if (subFile.Key !== folder.Prefix) {
+  //           result.push({
+  //             Key: folder.Prefix,
+  //             children: subFiles,
+  //           });
+  //         }
+  //       });
+  //     }
+
+  //     return result;
+  //   } catch (error) {
+  //     return { status: 'error', message: error };
+  //   }
+  // }
+
+  async listFiles(prefix = ''): Promise<any> {
     try {
       const params = {
         Bucket: BUCKET,
+        Prefix: prefix,
+        Delimiter: '/',
       };
       const command = new ListObjectsCommand(params);
       const res = await this.s3.send(command);
-      const files = res.Contents;
-      files.map((file) => {
-        const tenantId = file.Owner.ID.split('$')[0];
-        file['PublicUrl'] = `${process.env.S3_END_POINT}/${tenantId}:${BUCKET}/${file.Key}`;
+      const files = res.Contents || [];
+      const folders = res.CommonPrefixes || [];
+
+      const result = files
+        .filter((file) => file.Size > 0)
+        .map((file) => {
+          const tenantId = file.Owner.ID.split('$')[0];
+          file['PublicUrl'] = `${process.env.S3_END_POINT}/${tenantId}:${BUCKET}/${file.Key}`;
+          return file;
+        });
+
+      const folderResults = folders.map(async (folder) => {
+        const subFiles = await this.listFiles(folder.Prefix);
+        const validSubFiles = subFiles.filter((subFile) => subFile.Key !== folder.Prefix);
+        return {
+          Key: folder.Prefix,
+          children: validSubFiles,
+        };
       });
-      return files;
+
+      return [...result, ...(await Promise.all(folderResults))];
     } catch (error) {
       return { status: 'error', message: error };
     }
