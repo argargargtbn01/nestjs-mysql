@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create.user.dto';
-import { UpdateUserDto } from './dto/update.user.dto';
 
 @Injectable()
 export class UserService {
@@ -14,31 +13,35 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return await this.userRepo.find();
   }
-  async findById(id: string): Promise<User> {
+  async findById(uid: string): Promise<User> {
     return await this.userRepo.findOne({
       where: {
-        id,
+        uid,
       },
     });
   }
 
-  async findOne(username: string): Promise<User> {
+  async findOne(email: string): Promise<User> {
     return await this.userRepo.findOne({
       where: {
-        username,
+        email,
       },
     });
   }
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const uid = createUserDto.uid;
+    const user = await this.userRepo.findOne({
+      where: {
+        uid,
+      },
+    });
+    if (user) {
+      return user;
+    }
     return await this.userRepo.save(createUserDto);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.userRepo.update({ id }, updateUserDto);
-    return this.findById(id);
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.userRepo.delete(id);
+  async delete(uid: string): Promise<void> {
+    await this.userRepo.delete(uid);
   }
 }
