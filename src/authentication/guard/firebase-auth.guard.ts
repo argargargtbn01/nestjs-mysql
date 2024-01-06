@@ -1,8 +1,10 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import * as admin from 'firebase-admin';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class FirebaseAuthGuard implements CanActivate {
+  constructor(private userService: UserService) {}
   extractTokenFromHeader(request: Request): string {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     if (type !== 'Bearer') {
@@ -21,8 +23,9 @@ export class FirebaseAuthGuard implements CanActivate {
     if (!decodedToken) {
       throw new UnauthorizedException('Invalid ID token');
     }
-
-    request['user'] = decodedToken; // Save user in4 into request object
+    const user = await this.userService.findById(decodedToken.uid);
+    request['user'] = user;
+    console.log(user); // Save user in4 into request object
     return true;
   }
 }

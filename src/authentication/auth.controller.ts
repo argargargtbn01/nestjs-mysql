@@ -3,6 +3,9 @@ import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { FirebaseAuthGuard } from './guard/firebase-auth.guard';
+import { Role } from 'src/authorization/enums/role.enum';
+import { Roles } from 'src/authorization/decorators/role.decorator';
+import { RolesGuard } from 'src/authorization/guards/role.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -23,7 +26,8 @@ export class AuthController {
   getProfile(@Req() req): Promise<any> {
     return req.user;
   }
-  @UseGuards(FirebaseAuthGuard)
+  @UseGuards(FirebaseAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('authenticate')
   async authenticate(@Req() request: Request): Promise<any> {
     const user = request['user'];

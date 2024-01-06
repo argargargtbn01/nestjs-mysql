@@ -1,4 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
+import { Role } from '../entities/role.entity';
 
 export class CreateUserDto {
   @IsOptional()

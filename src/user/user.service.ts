@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create.user.dto';
 
@@ -18,6 +18,7 @@ export class UserService {
       where: {
         uid,
       },
+      relations: ['role'],
     });
   }
 
@@ -38,6 +39,7 @@ export class UserService {
     if (user) {
       return user;
     }
+    createUserDto['role'] = 2; // NEED TO FIX
     return await this.userRepo.save(createUserDto);
   }
 

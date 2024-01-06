@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './authentication/auth.module';
 import { UploadS3Module } from './upload-s3/upload-S3.module';
 import { UploadDriveModule } from './upload-drive/upload-drive.module';
+import { AuthorizationModule } from './authorization/authorization.module';
+import { CaslModule } from './casl/casl.module';
 // console.log('node_env: ', process.env.NODE_ENV);
 const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.internal' : 'localhost';
 @Module({
@@ -26,6 +28,8 @@ const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.intern
     AuthModule,
     UploadS3Module,
     UploadDriveModule,
+    AuthorizationModule,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService],
