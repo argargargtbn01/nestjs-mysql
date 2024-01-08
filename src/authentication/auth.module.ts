@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constant';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { FirebaseAuthGuard } from './guard/firebase-auth.guard';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FirebaseAuthGuard } from './guard/firebase-auth.guard';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    CaslModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, FirebaseAuthGuard],
   controllers: [AuthController],

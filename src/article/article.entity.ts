@@ -1,6 +1,6 @@
 import { Entity } from 'typeorm';
 
-@Entity()
+// @Entity()
 export class Article {
   id: number;
   isPublished: boolean;

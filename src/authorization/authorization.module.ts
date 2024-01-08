@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';
-import { RolesGuard } from './guards/role.guard';
+import { PoliciesGuard } from './guards/policies.guard';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
+  imports: [CaslModule],
   controllers: [AuthorizationController],
-  providers: [AuthorizationService, RolesGuard],
+  providers: [AuthorizationService, PoliciesGuard],
 })
 export class AuthorizationModule {}

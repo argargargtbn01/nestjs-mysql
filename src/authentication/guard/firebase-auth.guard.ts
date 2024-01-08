@@ -25,7 +25,6 @@ export class FirebaseAuthGuard implements CanActivate {
     }
     const user = await this.userService.findById(decodedToken.uid);
     request['user'] = user;
-    console.log(user); // Save user in4 into request object
     return true;
   }
 }
