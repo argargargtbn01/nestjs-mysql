@@ -15,9 +15,9 @@ const databaseHost = process.env.NODE_ENV === 'Production' ? 'host.docker.intern
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: databaseHost,
-      port: 3306,
+      port: 5432,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
