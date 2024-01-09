@@ -15,16 +15,16 @@ export class Policy {
   subject: string;
 
   @Column('text', {
-    nullable: false,
+    nullable: true,
     array: true,
   })
-  fields?: string[];
+  fields?: any[];
 
   @Column('text', {
-    nullable: false,
+    nullable: true,
     array: true,
   })
-  conditions?: string[];
+  conditions?: any[];
 
   @ManyToMany(() => Role, (role) => role.policies, {})
   roles: Role[];

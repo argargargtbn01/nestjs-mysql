@@ -24,7 +24,7 @@ export class AuthController {
   getProfile(@Req() req): Promise<any> {
     return req.user;
   }
-  @UseGuards(FirebaseAuthGuard, PoliciesGuard)
+  @UseGuards(FirebaseAuthGuard)
   @Get('authenticate')
   async authenticate(@Req() request: Request): Promise<any> {
     const user = request['user'];

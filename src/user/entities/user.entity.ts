@@ -1,5 +1,5 @@
 import { AbstractAuditingEntity } from 'src/common/entities/abstract-auditing-entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
 import { Role } from './role.entity';
 
 @Entity()
@@ -10,10 +10,13 @@ export class User extends AbstractAuditingEntity {
   @Column()
   email: string;
 
-  @ManyToOne(() => Role, (role) => role.users)
-  @JoinColumn({
-    referencedColumnName: 'roleId',
-    name: 'role_id',
+  @ManyToMany(() => Role, (role) => role.users, {
+    cascade: true,
   })
-  role?: any;
+  @JoinTable({
+    name: 'user_role',
+    joinColumn: { name: 'user_uid', referencedColumnName: 'uid' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'roleId' },
+  })
+  roles: Role[];
 }

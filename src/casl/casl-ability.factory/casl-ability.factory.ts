@@ -17,7 +17,7 @@ export type AppAbility = MongoAbility<[Action, Subjects]>;
 export class CaslAbilityFactory {
   createForUser(user: User): MongoAbility {
     const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
-    if (user.role.name === 'admin') {
+    if (user.roles[0].name === 'admin') {
       can(Action.Manage, 'all'); // read-write access to everything
     } else {
       can(Action.Read, 'all'); // read-only access to everything

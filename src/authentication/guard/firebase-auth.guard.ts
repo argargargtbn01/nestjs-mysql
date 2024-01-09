@@ -23,7 +23,10 @@ export class FirebaseAuthGuard implements CanActivate {
     if (!decodedToken) {
       throw new UnauthorizedException('Invalid ID token');
     }
-    const user = await this.userService.findById(decodedToken.uid);
+    const user = await this.userService.create({
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+    }); // create user if not exist
     request['user'] = user;
     return true;
   }
